@@ -52,7 +52,7 @@ app.get("/blogs", (req, res) => {
   }
 });
 
-app.post("/blogs", (req, res) => {
+app.post("/blog", (req, res) => {
   try {
     blogs.push(req.body);
     res.json(new BaseResponse(req.body, 200, "Successful!"));
@@ -89,7 +89,7 @@ app.delete("/blogs/:slug", (req, res) => {
 app.patch("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const normalizedSlug = convertToSlug(slug); // Chuẩn hóa slug
+    const normalizedSlug = convertToSlug(slug);
     const index = blogs.findIndex((item) => convertToSlug(item.title) === normalizedSlug);
     if (index !== -1) {
       blogs[index] = {
@@ -104,6 +104,7 @@ app.patch("/blogs/:slug", (req, res) => {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
+
 
 server.listen(PORT, () => {
   console.log("listening on *: " + PORT);
