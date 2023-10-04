@@ -15,8 +15,6 @@ const BaseResponse = require("./base.response");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const getSlug = require('speakingurl');
-
 let blogs = [
   {
     id: 0.03268631033824909,
