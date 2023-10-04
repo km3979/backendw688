@@ -110,5 +110,8 @@ function convertToSlug(text) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^\w\s]/gi, '')
-    .replace(/\s+/g, '-');
+    .replace(/\s+/g, '-')
+    .replace(/đ/g, 'd')  // Thay thế chữ "đ" thành "d"
+    .replace(/Đ/g, 'd'); // Thay thế chữ "Đ" thành "d"
 }
+
