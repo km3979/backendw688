@@ -1,17 +1,9 @@
 class BaseResponse {
-    constructor(data, status, message) {
-        this.data = data;
-        this.status = status;
-        this.message = message;
-    }
-
-    json() {
-        return {
-            data: this.data || null,
-            status: this.status || null,
-            message: this.message || null,
-        }
-    }
+  constructor(success, message, data) {
+    this.success = success;
+    this.message = message;
+    this.data = data;
+  }
 }
 
 module.exports = BaseResponse;
