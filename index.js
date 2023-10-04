@@ -84,7 +84,8 @@ app.delete("/blogs/:slug", (req, res) => {
 app.patch("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const index = blogs.findIndex((item) => convertToSlug(item.title) === slug);
+    const normalizedSlug = convertToSlug(slug); // Chuẩn hóa slug
+    const index = blogs.findIndex((item) => convertToSlug(item.title) === normalizedSlug);
     if (index !== -1) {
       blogs[index] = {
         ...blogs[index],
