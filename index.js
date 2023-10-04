@@ -52,7 +52,7 @@ app.get("/blogs", (req, res) => {
   }
 });
 
-app.post("/blog", (req, res) => {
+app.post("/blogs", (req, res) => {
   try {
     blogs.push(req.body);
     res.json(new BaseResponse(req.body, 200, "Successful!"));
@@ -60,6 +60,7 @@ app.post("/blog", (req, res) => {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
+
 
 app.get("/blogs/:slug", (req, res) => {
   try {
