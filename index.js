@@ -57,31 +57,27 @@ app.get("/blogs", (req, res) => {
 
 app.post("/blogs", (req, res) => {
   try {
-    const newBlog = {
-      ...req.body,
-      title: getSlug(req.body.title),
-    };
-    blogs.push(newBlog);
-    res.json(new BaseResponse(newBlog, 200, "Successful!"));
+    blogs.push(req.body);
+    res.json(new BaseResponse(req.body, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
 
-app.get("/blogs/:slug", (req, res) => {
+app.get("/blogs/:title", (req, res) => {
   try {
-    const { slug } = req.params;
-    const blog = blogs.find((item) => getSlug(item.title) === slug);
+    const { title } = req.params;
+    const blog = blogs.find((item) => item.title === title);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
 
-app.delete("/blogs/:slug", (req, res) => {
+app.delete("/blogs/:title", (req, res) => {
   try {
-    const { slug } = req.params;
-    const index = blogs.findIndex((item) => getSlug(item.title) === slug);
+    const { title } = req.params;
+    const index = blogs.findIndex((item) => item.title === title);
     if (index !== -1) {
       blogs.splice(index, 1);
       res.json(new BaseResponse(index, 200, "Successful!"));
@@ -93,13 +89,13 @@ app.delete("/blogs/:slug", (req, res) => {
   }
 });
 
-app.patch("/blogs/:slug", (req, res) => {
+app.patch("/blogs/:title", (req, res) => {
   try {
-    const { slug } = req.params;
-    const index = blogs.findIndex((item) => getSlug(item.title) === slug);
+    const { title } = req.params;
+    const index = blogs.findIndex((item) => item.title === title);
     if (index !== -1) {
       blogs[index] = {
-        ...blogs[index],
+        title,
         ...req.body,
       };
       res.json(new BaseResponse(blogs[index], 200, "Successful!"));
