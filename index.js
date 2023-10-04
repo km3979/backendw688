@@ -59,7 +59,8 @@ app.post("/blogs", (req, res) => {
 app.get("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const blog = blogs.find((item) => convertToSlug(item.title) === slug);
+    const normalizedSlug = convertToSlug(slug); // Chuẩn hóa slug
+    const blog = blogs.find((item) => convertToSlug(item.title) === normalizedSlug);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
@@ -108,10 +109,9 @@ function convertToSlug(text) {
   return text
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[\u0300-\u036f]/g, '') // Loại bỏ các dấu thanh và ký tự đặc biệt
+    .replace(/đ/g, 'd')  // Thêm quy tắc thay thế cho chữ "đ"
+    .replace(/Đ/g, 'd')  // Thêm quy tắc thay thế cho chữ "Đ"
     .replace(/[^\w\s]/gi, '')
-    .replace(/\s+/g, '-')
-    .replace(/đ/g, 'd')  // Thay thế chữ "đ" thành "d"
-    .replace(/Đ/g, 'd'); // Thay thế chữ "Đ" thành "d"
+    .replace(/\s+/g, '-');
 }
-
