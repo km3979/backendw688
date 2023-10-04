@@ -59,7 +59,7 @@ app.post("/blogs", (req, res) => {
 app.get("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const blog = blogs.find((item) => item.title.toLowerCase() === slug);
+    const blog = blogs.find((item) => convertToSlug(item.title) === slug);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
@@ -69,7 +69,7 @@ app.get("/blogs/:slug", (req, res) => {
 app.delete("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const index = blogs.findIndex((item) => item.title.toLowerCase() === slug);
+    const index = blogs.findIndex((item) => convertToSlug(item.title) === slug);
     if (index !== -1) {
       blogs.splice(index, 1);
       res.json(new BaseResponse(index, 200, "Successful!"));
@@ -84,7 +84,7 @@ app.delete("/blogs/:slug", (req, res) => {
 app.patch("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const index = blogs.findIndex((item) => item.title.toLowerCase() === slug);
+    const index = blogs.findIndex((item) => convertToSlug(item.title) === slug);
     if (index !== -1) {
       blogs[index] = {
         ...blogs[index],
@@ -102,3 +102,12 @@ app.patch("/blogs/:slug", (req, res) => {
 server.listen(PORT, () => {
   console.log("listening on *: " + PORT);
 });
+
+function convertToSlug(text) {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s]/gi, '')
+    .replace(/\s+/g, '-');
+}
