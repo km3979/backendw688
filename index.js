@@ -9,7 +9,7 @@ app.use(cors());
 
 app.use("/", express.static("public"));
 
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const BaseResponse = require("./base.response");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,6 +38,7 @@ let blogs = [
   },
 ];
 
+
 app.get("/blogs", (req, res) => {
   try {
     res.json(new BaseResponse(blogs, 200, "Successful!"));
@@ -55,20 +56,20 @@ app.post("/blogs", (req, res) => {
   }
 });
 
-app.get("/blogs/:title", (req, res) => {
+app.get("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const blog = blogs.find((item) => item.title === title);
+    const { slug } = req.params;
+    const blog = blogs.find((item) => item.title.toLowerCase() === slug);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
 
-app.delete("/blogs/:title", (req, res) => {
+app.delete("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const index = blogs.findIndex((item) => item.title === title);
+    const { slug } = req.params;
+    const index = blogs.findIndex((item) => item.title.toLowerCase() === slug);
     if (index !== -1) {
       blogs.splice(index, 1);
       res.json(new BaseResponse(index, 200, "Successful!"));
@@ -80,13 +81,13 @@ app.delete("/blogs/:title", (req, res) => {
   }
 });
 
-app.patch("/blogs/:title", (req, res) => {
+app.patch("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const index = blogs.findIndex((item) => item.title === title);
+    const { slug } = req.params;
+    const index = blogs.findIndex((item) => item.title.toLowerCase() === slug);
     if (index !== -1) {
       blogs[index] = {
-        title,
+        ...blogs[index],
         ...req.body,
       };
       res.json(new BaseResponse(blogs[index], 200, "Successful!"));
