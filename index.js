@@ -59,8 +59,7 @@ app.post("/blogs", (req, res) => {
 app.get("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
-    const normalizedSlug = convertToSlug(slug); // Chuẩn hóa slug
-    const blog = blogs.find((item) => convertToSlug(item.title) === normalizedSlug);
+    const blog = blogs.find((item) => convertToSlug(item.title) === slug);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
