@@ -15,6 +15,8 @@ const BaseResponse = require("./base.response");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const getSlug = require('speakingurl');
+
 let blogs = [
   {
     id: 0.03268631033824909,
@@ -55,27 +57,31 @@ app.get("/blogs", (req, res) => {
 
 app.post("/blogs", (req, res) => {
   try {
-    blogs.push(req.body);
-    res.json(new BaseResponse(req.body, 200, "Successful!"));
+    const newBlog = {
+      ...req.body,
+      title: getSlug(req.body.title),
+    };
+    blogs.push(newBlog);
+    res.json(new BaseResponse(newBlog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
 
-app.get("/blogs/:title", (req, res) => {
+app.get("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const blog = blogs.find((item) => item.title === title);
+    const { slug } = req.params;
+    const blog = blogs.find((item) => getSlug(item.title) === slug);
     res.json(new BaseResponse(blog, 200, "Successful!"));
   } catch (error) {
     res.json(new BaseResponse(404, "Error!"));
   }
 });
 
-app.delete("/blogs/:title", (req, res) => {
+app.delete("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const index = blogs.findIndex((item) => item.title === title);
+    const { slug } = req.params;
+    const index = blogs.findIndex((item) => getSlug(item.title) === slug);
     if (index !== -1) {
       blogs.splice(index, 1);
       res.json(new BaseResponse(index, 200, "Successful!"));
@@ -87,13 +93,13 @@ app.delete("/blogs/:title", (req, res) => {
   }
 });
 
-app.patch("/blogs/:title", (req, res) => {
+app.patch("/blogs/:slug", (req, res) => {
   try {
-    const { title } = req.params;
-    const index = blogs.findIndex((item) => item.title === title);
+    const { slug } = req.params;
+    const index = blogs.findIndex((item) => getSlug(item.title) === slug);
     if (index !== -1) {
       blogs[index] = {
-        title,
+        ...blogs[index],
         ...req.body,
       };
       res.json(new BaseResponse(blogs[index], 200, "Successful!"));
