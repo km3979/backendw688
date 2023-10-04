@@ -45,20 +45,18 @@ let blogs =  [
 ];
 
 app.get("/blogs", (req, res) => {
-  try {
-    res.json(new BaseResponse(blogs, 200, "Successful!"));
-  } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
-  }
+  res.json(BaseResponse.success(blogs));
 });
 
 app.post("/blogs", (req, res) => {
-  try {
-    blogs.push(req.body);
-    res.json(new BaseResponse(req.body, 200, "Successful!"));
-  } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
-  }
+  const { title, body } = req.body;
+  const newBlog = {
+    id: Math.random(),
+    title,
+    body,
+  };
+  blogs.push(newBlog);
+  res.json(BaseResponse.success(newBlog));
 });
 
 app.get("/blogs/:slug", (req, res) => {
@@ -106,7 +104,7 @@ app.patch("/blogs/:slug", (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log("listening on *: " + PORT);
+  console.log(`Server is running on port ${PORT}`);
 });
 
 function convertToSlug(text) {
