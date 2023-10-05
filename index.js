@@ -9,11 +9,10 @@ app.use(cors());
 
 app.use("/", express.static("public"));
 
-const bodyParser = require("body-parser");
-const BaseResponse = require("./base.response");
 
+const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 
 let blogs =  [
   {
