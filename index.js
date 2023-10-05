@@ -9,10 +9,9 @@ app.use(cors());
 
 app.use("/", express.static("public"));
 
-
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: '10mb' })); // Tăng giới hạn kích thước theo nhu cầu của bạn
 
 let blogs =  [
   {
@@ -45,18 +44,18 @@ let blogs =  [
 
 app.get("/blogs", (req, res) => {
   try {
-    res.json(new BaseResponse(blogs, 200, "Successful!"));
+    res.json({ data: blogs, status: 200, message: "Successful!" });
   } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
+    res.json({ status: 404, message: "Error!" });
   }
 });
 
 app.post("/blogs", (req, res) => {
   try {
     blogs.push(req.body);
-    res.json(new BaseResponse(req.body, 200, "Successful!"));
+    res.json({ data: req.body, status: 200, message: "Successful!" });
   } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
+    res.json({ status: 404, message: "Error!" });
   }
 });
 
@@ -64,9 +63,9 @@ app.get("/blogs/:slug", (req, res) => {
   try {
     const { slug } = req.params;
     const blog = blogs.find((item) => convertToSlug(item.title) === slug);
-    res.json(new BaseResponse(blog, 200, "Successful!"));
+    res.json({ data: blog, status: 200, message: "Successful!" });
   } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
+    res.json({ status: 404, message: "Error!" });
   }
 });
 
@@ -76,12 +75,12 @@ app.delete("/blogs/:slug", (req, res) => {
     const index = blogs.findIndex((item) => convertToSlug(item.title) === slug);
     if (index !== -1) {
       blogs.splice(index, 1);
-      res.json(new BaseResponse(index, 200, "Successful!"));
+      res.json({ data: index, status: 200, message: "Successful!" });
     } else {
-      res.json(new BaseResponse(404, "Error!"));
+      res.json({ status: 404, message: "Error!" });
     }
   } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
+    res.json({ status: 404, message: "Error!" });
   }
 });
 
@@ -95,12 +94,12 @@ app.patch("/blogs/:slug", (req, res) => {
         ...blogs[index],
         ...req.body,
       };
-      res.json(new BaseResponse(blogs[index], 200, "Successful!"));
+      res.json({ data: blogs[index], status: 200, message: "Successful!" });
     } else {
-      res.json(new BaseResponse(404, "Error!"));
+      res.json({ status: 404, message: "Error!" });
     }
   } catch (error) {
-    res.json(new BaseResponse(404, "Error!"));
+    res.json({ status: 404, message: "Error!" });
   }
 });
 
